@@ -1,0 +1,152 @@
+---
+
+import { Image } from "astro:assets";
+
+import partner1 from "../assets/partners/partner-1.png"
+import partner2 from "../assets/partners/partner-2.png"
+import partner3 from "../assets/partners/partner-3.png"
+import partner4 from "../assets/partners/partner-4.png"
+
+
+const partners = [
+    { src: partner1, alt: "Partner Logo 1" },
+    { src: partner2, alt: "Partner Logo 2" },
+    { src: partner3, alt: "Partner Logo 3" },
+    { src: partner4, alt: "Partner Logo 4" },
+]
+
+---
+
+<section class="partner-section">
+  <div class="partner-container">
+    <h3 class="partner-title">Nos Partenaires & Collaborateurs</h3>
+    
+    <div class="marquee">
+      <!-- The marquee track needs the logos duplicated exactly twice to loop seamlessly -->
+      <div class="marquee-track">
+        
+        {
+          partners.map((partner) => (
+            <div class="partner-logo">
+              <Image src={partner.src} alt={partner.alt} width={140} height={50} format="webp" quality={80} loading="lazy" />
+            </div>
+          ))
+        }
+
+        {
+          partners.map((partner) => (
+            <div class="partner-logo">
+              <Image src={partner.src} alt={partner.alt} width={140} height={50} format="webp" quality={80} loading="lazy" />
+            </div>
+          ))
+        }
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .partner-section {
+    padding: 4rem 0;
+    background-color: #f8fafc; /* Subtle off-white background */
+    border-bottom: 1px solid #e2e8f0;
+    overflow: hidden;
+  }
+
+  .partner-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .partner-title {
+    text-align: center;
+    font-size: 0.974rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #64748b; /* Muted gray for a sophisticated look */
+    margin-bottom: 2.5rem;
+    font-weight: 600;
+  }
+
+  /* --- Marquee Layout & Masking --- */
+  .marquee {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    
+    /* Adds a modern fade effect on the left and right edges so logos fade into view */
+    mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 15%,
+      rgba(0, 0, 0, 1) 85%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 15%,
+      rgba(0, 0, 0, 1) 85%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    gap: 5rem; /* Space between each logo */
+    padding-right: 5rem; /* Match gap to prevent stuttering */
+    animation: scroll 30s linear infinite;
+  }
+
+  /* Pause the animation when a user hovers over the bar */
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .partner-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px; /* Standardize width container */
+    height: 50px;
+  }
+
+  .partner-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* Turns full-color logos into sleek, gray, high-contrast versions */
+    filter: grayscale(100%) opacity(0.6);
+    transition: filter 0.3s ease;
+  }
+
+  /* Bring logos back to full clarity on hover */
+  .partner-logo img:hover {
+    filter: grayscale(0%) opacity(1);
+  }
+
+  /* --- Infinite Scroll Animation --- */
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      /* Moves exactly halfway through the track (the length of Group 1) */
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Respect users who prefer no motion */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,456 @@
+---
+// ActuSec.astro
+// Section Actualités & Blog — fond bleu nuit, carrousel de cartes
+// Boutons de scroll (desktop) + scroll horizontal tactile (mobile)
+
+const articles = [
+  {
+    type: "Actualité",
+    color: "blue",
+    date: "12 juin 2026",
+    title: "Lancement du programme de santé communautaire au Kivu",
+    excerpt:
+      "Une nouvelle initiative pour rapprocher les soins de proximité des populations les plus isolées.",
+    image:
+      "https://images.unsplash.com/photo-1542884748-2b87b36c6b90?auto=format&fit=crop&w=800&q=80",
+    href: "/fr/actu/programme-kivu",
+  },
+  {
+    type: "Blog",
+    color: "orange",
+    date: "5 juin 2026",
+    title: "Pourquoi la donnée change la santé publique",
+    excerpt:
+      "Retour sur l'impact des outils numériques dans le suivi des indicateurs de santé.",
+    image:
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80",
+    href: "/fr/blog/donnee-sante",
+  },
+  {
+    type: "Actualité",
+    color: "green",
+    date: "28 mai 2026",
+    title: "Partenariat avec les acteurs locaux de Goma",
+    excerpt:
+      "Un accord stratégique pour renforcer l'accès aux soins essentiels.",
+    image:
+      "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80",
+    href: "/fr/actu/partenariat-goma",
+  },
+  {
+    type: "Blog",
+    color: "blue",
+    date: "15 mai 2026",
+    title: "Sur le terrain : une journée avec nos équipes",
+    excerpt:
+      "Immersion auprès des soignants qui font vivre nos programmes au quotidien.",
+    image:
+      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80",
+    href: "/fr/blog/journee-terrain",
+  },
+  {
+    type: "Actualité",
+    color: "orange",
+    date: "2 mai 2026",
+    title: "Campagne de vaccination : 50 000 personnes touchées",
+    excerpt:
+      "Bilan d'une opération d'envergure menée dans plusieurs provinces.",
+    image:
+      "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=800&q=80",
+    href: "/fr/actu/campagne-vaccination",
+  },
+];
+---
+
+<section class="actu">
+  <div class="container">
+    <!-- En-tête -->
+    <header class="section-header">
+      <div class="header-text">
+        <!-- <span class="badge">Actualités & Blog</span> -->
+        <h2 class="section-title">Nos dernières publications</h2>
+        <p class="section-subtitle">
+          Suivez nos actions sur le terrain, nos réflexions et les temps forts
+          de notre engagement.
+        </p>
+      </div>
+
+      <!-- Boutons de scroll (desktop) -->
+      <div class="scroll-controls">
+        <button class="scroll-btn" data-dir="prev" aria-label="Articles précédents">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <button class="scroll-btn" data-dir="next" aria-label="Articles suivants">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Piste de cartes scrollable -->
+    <div class="cards-track" id="actuTrack">
+      {
+        articles.map((article) => (
+          <article class={`actu-card accent-${article.color}`}>
+            <a href={article.href} class="card-link">
+              <div class="card-media">
+                <img src={article.image} alt={article.title} loading="lazy" />
+              </div>
+              <div class="card-body">
+                <span class="card-date">{article.date}</span>
+                <h3 class="card-title">{article.title}</h3>
+                <p class="card-excerpt">{article.excerpt}</p>
+                <span class="card-cta">
+                  Lire la suite
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="actu-footer">
+        <a class="btn-all" href="/fr/actu">
+            Voir toutes les actualités
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const track = document.getElementById("actuTrack");
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".scroll-btn");
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!track) return;
+      const card = track.querySelector<HTMLElement>(".actu-card");
+      const gap = 24;
+      const amount = card ? card.offsetWidth + gap : track.clientWidth * 0.8;
+      const dir = btn.dataset.dir === "next" ? 1 : -1;
+      track.scrollBy({ left: amount * dir, behavior: "smooth" });
+    });
+  });
+</script>
+
+<style>
+  /* --- DESIGN TOKENS --- */
+  .actu {
+    --navy: #0b1b3a;
+    --navy-soft: #11254d;
+    --blue: #009cb4;
+    --orange: #eb690b;
+    --green: #48a23f;
+    --white: #ffffff;
+    --text-light: #e2e8f0;
+    --text-muted: #94a3b8;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --shadow-md: 0 10px 25px -5px rgb(0 0 0 / 0.35);
+    --ease: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    background-color: var(--navy);
+    padding: clamp(4rem, 8vw, 7rem) 0;
+    color: var(--white);
+    overflow: hidden;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* --- EN-TÊTE --- */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .header-text {
+    max-width: 640px;
+  }
+
+  /* .badge {
+    display: inline-block;
+    background-color: rgba(0, 156, 180, 0.15);
+    color: var(--blue);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+  } */
+
+  .section-title {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    margin: 0 0 1rem;
+    color: var(--white);
+  }
+
+  .section-subtitle {
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* --- BOUTONS DE SCROLL --- */
+  .scroll-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .scroll-btn {
+    width: 3rem;
+    height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: var(--navy-soft);
+    color: var(--white);
+    cursor: pointer;
+    transition: var(--ease);
+  }
+
+  .scroll-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .scroll-btn:hover {
+    background-color: var(--white);
+    border-color: var(--blue);
+    color: var(--navy);
+    transform: translateY(-2px);
+  }
+
+  /* --- PISTE DE CARTES --- */
+  .cards-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(320px, 1fr);
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .cards-track::-webkit-scrollbar {
+    display: none; /* Chrome / Safari */
+  }
+
+  /* --- CARTE --- */
+  .actu-card {
+    scroll-snap-align: start;
+    background-color: var(--navy-soft);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: var(--ease);
+  }
+
+  .actu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-sm);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: #1e293b;
+  }
+
+  .card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: var(--ease);
+  }
+
+  .actu-card:hover .card-media img {
+    transform: scale(1.06);
+  }
+
+  /* .card-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    color: var(--white);
+    background-color: var(--blue);
+  } */
+
+  .accent-orange .card-tag { background-color: var(--orange); }
+  .accent-green .card-tag { background-color: var(--green); }
+  .accent-blue .card-tag { background-color: var(--blue); }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.5rem 1.5rem 1.75rem;
+    flex: 1;
+  }
+
+  .card-date {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+    color: var(--white);
+  }
+
+  .card-excerpt {
+    font-size: 0.975rem;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin: 0;
+  }
+
+  .card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .card-cta svg {
+    width: 1rem;
+    height: 1rem;
+    transition: var(--ease);
+  }
+
+  .actu-card:hover .card-cta svg {
+    transform: translateX(4px);
+  }
+
+  .actu-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+
+  .btn-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.95rem 2.25rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--ease);
+    align-self: flex-start;
+    background-color: var(--text-main);
+    color: var(--white);
+    border: 2px solid var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-all svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: var(--ease);
+  }
+
+  .btn-all:hover {
+    background-color: var(--white);
+    color: var(--navy);
+    border-color: var(--navy);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* --- MOBILE : scroll horizontal au doigt --- */
+  @media (max-width: 768px) {
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .scroll-controls {
+      display: none; /* on navigue au doigt sur mobile */
+    }
+
+    .cards-track {
+      grid-auto-columns: 85%;
+      gap: 1rem;
+      /* léger débordement pour suggérer le swipe */
+      margin: 0 -1.5rem;
+      padding: 0 1.5rem 1rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .card-excerpt {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .card-cta {
+      font-size: 0.75rem;
+    }
+
+    .card-body {
+        gap: 0.45rem;
+        padding: 1.25rem 1.25rem 1.5rem;
+    }
+  }
+</style>

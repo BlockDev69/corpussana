@@ -1,0 +1,246 @@
+---
+import { Image } from "astro:assets";
+
+import slide1 from "../assets/hero/slide-1.jpg";
+import slide2 from "../assets/hero/slide-2.jpg";
+import slide3 from "../assets/hero/slide-3.jpg";
+---
+
+<section class="hero">
+  <!-- CSS-Only Background Slider -->
+  <div class="hero-slider">
+    <!-- Replace these src URLs with your actual images in the public folder -->
+    <Image src={slide1} alt="Community support" class="slide" widths={[768, 1280, 1920]} sizes="100vw" format="webp" quality={75} loading="eager" />
+    <Image src={slide2} alt="Global health initiative" class="slide" widths={[768, 1280, 1920]} sizes="100vw" format="webp" quality={75} loading="lazy" />
+    <Image src={slide3} alt="Team working together" class="slide" widths={[768, 1280, 1920]} sizes="100vw" format="webp" quality={75} loading="lazy" />
+
+  </div>
+
+  <!-- Gradient Overlay for Text Readability -->
+  <div class="hero-overlay"></div>
+
+  <!-- Hero Content -->
+  <div class="hero-content">
+    <h1>Transfromer les communautés pour un avenir plus sain.</h1>
+    <p>Rejoignez notre mission pour offrir des solutions de santé durables et accompagner les populations vulnérables à travers la RDC.</p>
+    
+    <div class="hero-actions">
+      <a href="/donate" class="btn btn-primary">Faire un don</a>
+      <a href="/about" class="btn btn-outline">Notre mission</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --- Base Hero Setup --- */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 85vh; /* Adjust height as needed */
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #1a1a1a;
+  }
+
+  /* --- CSS-Only Ken Burns Slider --- */
+  .hero-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    /* 18s total duration for 3 slides (6s per slide) */
+    animation: kenburns 18s infinite linear;
+  }
+
+  /* Stagger the animations for each slide */
+  .slide:nth-child(1) { animation-delay: 0s; }
+  .slide:nth-child(2) { animation-delay: 6s; }
+  .slide:nth-child(3) { animation-delay: 12s; }
+
+  @keyframes kenburns {
+    0% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    5% {
+      opacity: 1;
+    }
+    33% {
+      opacity: 1;
+    }
+    38% {
+      opacity: 0;
+      transform: scale(1.08); /* The zoom effect */
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+  /* --- Overlay --- */
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    /* Dark gradient from bottom to top, and slightly from the left */
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.1) 100%
+    ),
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+  }
+
+  /* --- Content Styling --- */
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 900px;
+    padding: 0 2rem;
+    letter-spacing: 0.04em;
+    text-align: center; /* Change to left for a left-aligned hero */
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Change to flex-start for left-aligned */
+    gap: 1.5rem;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .hero-content p {
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    line-height: 1.7;
+    max-width: 800px;
+    margin: 0;
+    color: #e2e8f0;
+  }
+
+  /* --- Buttons --- */
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background-color: #d94b2b; /* Corus-style warm accent color */
+    color: white;
+    border: 1px solid #d94b2b;
+  }
+
+  .btn-primary:hover {
+    background-color: #b83a1f;
+    border-color: #b83a1f;
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+
+  .btn-outline:hover {
+    background-color: white;
+    color: #1a1a1a;
+    transform: translateY(-2px);
+  }
+
+    /* --- Mobile Adjustments --- */
+    @media (max-width: 768px) {
+    .hero {
+        height: 100vh;
+        min-height: 400px;
+    }
+
+    .hero-content {
+        padding: 0 1.10rem;
+        gap: 1.10rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.85rem;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(5rem, 8vw, 5rem);
+        line-height: 1.1;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 100%;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+        padding: 0.9rem 1.5rem;
+        font-size: 1rem;
+    }
+    }
+
+    /* --- Small phones --- */
+    @media (max-width: 400px) {
+    .hero-content h1 {
+        font-size: 2.96rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 0.8rem 1.25rem;
+        font-size: 0.9rem;
+    }
+    }
+</style>
