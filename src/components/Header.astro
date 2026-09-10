@@ -40,12 +40,12 @@
       <div class="nav-wrapper">
         <ul class="nav-list">
           <li class="nav-item has-dropdown">
-            <a href="/qui-sommes-nous" aria-haspopup="true">Qui sommes-nous</a>
+            <a href="/about/about-us" aria-haspopup="true">Qui sommes-nous</a>
             <ul class="dropdown" aria-label="Sous-menu Qui sommes-nous">
-              <li><a href="/notre-mission">Notre mission</a></li>
-              <li><a href="/notre-equipe">Notre équipe</a></li>
-              <li><a href="/nos-partenaires">Nos partenaires</a></li>
-              <li><a href="/rapports-annuels">Rapports annuels</a></li>
+              <li><a href="/about/about-us#mission">Notre mission</a></li>
+              <li><a href="/about/about-us#equipe">Notre équipe</a></li>
+              <li><a href="/about/about-us#partenaires">Nos partenaires</a></li>
+              <li><a href="/about/about-us#rapports">Rapports annuels</a></li>
             </ul>
           </li>
           <li class="nav-item has-dropdown">
@@ -85,21 +85,28 @@
 
 <style>
   :root {
+    /* Palette cohérente avec le reste du site */
     --color-primary: #022c43;
     --color-primary-light: #053f5e;
-    --color-accent: #ff5a1f;
-    --color-accent-hover: #e0440b;
+    --color-accent: #eb690b;
+    --color-accent-hover: #d55a08;
     --color-text: #0f172a;
     --color-text-muted: #475569;
-    --color-bg-light: #f8fafc;
-    --color-border: #e2e8f0;
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-full: 9999px;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04);
-    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.05);
-    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --color-bg-light: #f1f5f9;
+    --color-border: #022c43;
+    --color-border-light: #cbd5e1;
+    
+    /* Strict zero radius */
+    --radius-sm: 0px;
+    --radius-md: 0px;
+    --radius-full: 0px;
+    
+    /* Hard, offset shadows for strict Square UI */
+    --shadow-sm: 3px 3px 0px var(--color-primary);
+    --shadow-md: 5px 5px 0px var(--color-primary);
+    --shadow-lg: 8px 8px 0px var(--color-primary);
+    
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     --nav-height: 88px;
   }
 
@@ -124,6 +131,7 @@
     box-sizing: border-box;
   }
 
+  /* --- TOP BAR --- */
   .top-bar {
     background-color: var(--color-primary);
     color: #ffffff;
@@ -131,7 +139,7 @@
     font-weight: 500;
     letter-spacing: 0.03em;
     padding: 0.6rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 2px solid var(--color-accent);
   }
   .top-bar .container { min-height: 28px; }
 
@@ -143,10 +151,16 @@
   }
   .social-links a:hover {
     color: var(--color-accent);
-    transform: translateY(-1px);
+    transform: translate(-2px, -2px);
   }
 
   .top-bar-right { display: flex; align-items: center; gap: 1.5rem; }
+  .top-separator {
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.3);
+    display: block;
+  }
 
   .top-link {
     color: rgba(255, 255, 255, 0.85);
@@ -157,11 +171,11 @@
   .top-link::after {
     content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: -4px;
     left: 0;
     width: 100%;
-    height: 1px;
-    background: rgba(255,255,255,0.4);
+    height: 2px;
+    background: var(--color-accent);
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.25s ease;
@@ -173,14 +187,13 @@
 
   .lang-switch {
     display: flex;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 2px;
-    border-radius: var(--radius-full);
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 0;
   }
 
   .lang-link {
-    padding: 0.2rem 0.6rem;
-    border-radius: var(--radius-full);
+    padding: 0.25rem 0.75rem;
     font-weight: 700;
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.6);
@@ -190,28 +203,36 @@
   .lang-link.active {
     background-color: #ffffff;
     color: var(--color-primary);
-    box-shadow: var(--shadow-sm);
   }
 
+  /* --- MAIN NAV --- */
   .main-nav {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
-    box-shadow: var(--shadow-sm);
+    background: #ffffff;
+    border-bottom: 2px solid var(--color-primary);
   }
   .main-nav .container { height: var(--nav-height); }
 
   .logo-text {
-    font-size: 1.6rem;
-    font-weight: 500;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: var(--color-primary);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
+    border: 2px solid var(--color-primary);
+    padding: 0.4rem 0.8rem;
+    background: #ffffff;
+    transition: var(--transition-smooth);
+  }
+  .logo-text:hover {
+    background: var(--color-primary);
+    color: #ffffff;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px var(--color-accent);
   }
   .logo-text strong {
     font-weight: 800;
     color: var(--color-accent);
   }
+  .logo-text:hover strong { color: #ffffff; }
 
   .nav-wrapper {
     display: flex;
@@ -221,104 +242,101 @@
     gap: 2.5rem;
   }
 
-  .nav-list { display: flex; gap: 2rem; }
+  .nav-list { display: flex; gap: 0.5rem; }
 
   .nav-item { position: relative; }
   .nav-item > a {
     display: flex;
     align-items: center;
-    padding: 2rem 0;
+    padding: 2rem 0.75rem;
     color: var(--color-primary);
-    font-weight: 500;
-    font-size: 1.3rem;
+    font-weight: 600;
+    font-size: 1.05rem;
     transition: var(--transition-smooth);
+    border-bottom: 3px solid transparent;
   }
-  .nav-item > a:hover { color: var(--color-accent); }
+  .nav-item > a:hover { 
+    color: var(--color-accent); 
+    border-bottom-color: var(--color-accent);
+  }
 
   .has-dropdown > a::after {
     content: '';
     display: inline-block;
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
     border-right: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
     transform: rotate(45deg);
     margin-left: 0.5rem;
+    margin-bottom: 2px;
     transition: transform 0.2s ease;
   }
   .has-dropdown:hover > a::after {
-    transform: rotate(-135deg) translateY(-1px);
+    transform: rotate(-135deg) translateY(-2px);
   }
 
+  /* --- DROPDOWN --- */
   .dropdown {
     position: absolute;
-    top: 100%; /* Aligné pile sous le parent */
+    top: 100%;
     left: 50%;
     transform: translateX(-50%) translateY(10px) scale(0.98);
     min-width: 250px;
     background: #ffffff;
-    border-radius: 2px; /* Un angle très léger pour ne pas faire "brut", ou 0px pour un carré parfait */
-    border: 1px solid #e2e8f0; /* Bordure fine moderne style Tailwind */
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    
+    border-radius: 0;
+    border: 2px solid var(--color-primary);
+    box-shadow: 6px 6px 0px var(--color-primary);
     padding: 0.75rem;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    
-    /* Transition fluide */
     transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 50;
   }
 
-    /* --- La Flèche Stylisée --- */
   .dropdown::before {
     content: '';
     position: absolute;
-    top: -6px; /* Moitié de la hauteur de la flèche */
+    top: -8px;
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
-    width: 10px;
-    height: 10px;
+    width: 14px;
+    height: 14px;
     background: #ffffff;
-    
-    /* On applique la même bordure haute et gauche pour correspondre au dropdown */
-    border-top: 1px solid #e2e8f0;
-    border-left: 1px solid #e2e8f0;
+    border-top: 2px solid var(--color-primary);
+    border-left: 2px solid var(--color-primary);
   }
 
   .dropdown.is-active,
-    *:hover > .dropdown {
+  .has-dropdown:hover .dropdown,
+  .has-dropdown:focus-within .dropdown {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateX(-50%) translateY(10px) scale(1);
+    transform: translateX(-50%) translateY(0) scale(1);
   }
+
   .dropdown li a {
     display: block;
     padding: 0.75rem 1rem;
-    color: var(--color-text-muted);
-    font-size: 1.1rem;
-    font-weight: 500;
-    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0;
+    border: 2px solid transparent;
     transition: var(--transition-smooth);
   }
   .dropdown li a:hover,
   .dropdown li a:focus {
     background: var(--color-bg-light);
     color: var(--color-accent);
+    border-color: var(--color-accent);
     padding-left: 1.25rem;
   }
 
-  .has-dropdown:hover .dropdown,
-  .has-dropdown:focus-within .dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0) scale(1);
-    pointer-events: auto;
-  }
-
+  /* --- CTA BUTTON --- */
   .cta-btn {
     display: inline-flex;
     align-items: center;
@@ -329,18 +347,23 @@
     font-weight: 700;
     letter-spacing: 0.03em;
     font-size: 0.85rem;
-    box-shadow: 0 4px 14px rgba(255, 90, 31, 0.25);
+    border: 2px solid var(--color-primary);
+    border-radius: 0;
+    box-shadow: 4px 4px 0px var(--color-primary);
     transition: var(--transition-smooth);
   }
   .cta-btn:hover {
-    background-color: var(--white);
+    background-color: #ffffff;
     color: var(--color-accent);
-    border-color: var(--color-accent-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(255, 90, 31, 0.35);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--color-primary);
   }
-  .cta-btn:active { transform: translateY(0); }
+  .cta-btn:active { 
+    transform: translate(2px, 2px); 
+    box-shadow: 2px 2px 0px var(--color-primary);
+  }
 
+  /* --- MOBILE MENU --- */
   .mobile-checkbox, .mobile-toggle-btn { display: none; }
 
   @media (max-width: 1024px) {
@@ -351,21 +374,21 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      width: 26px;
-      height: 18px;
+      width: 28px;
+      height: 20px;
       cursor: pointer;
       z-index: 1001;
     }
 
     .hamburger-line {
       display: block;
-      height: 2px;
+      height: 3px;
       background-color: var(--color-primary);
-      border-radius: var(--radius-full);
+      border-radius: 0;
       transition: var(--transition-smooth);
     }
     .hamburger-line:nth-child(1) { width: 100%; }
-    .hamburger-line:nth-child(2) { width: 75%; align-self: flex-end; }
+    .hamburger-line:nth-child(2) { width: 70%; align-self: flex-end; }
     .hamburger-line:nth-child(3) { width: 100%; }
 
     .nav-wrapper {
@@ -376,10 +399,11 @@
       background: #ffffff;
       flex-direction: column;
       align-items: stretch;
-      padding: 1.5rem 2rem 2.5rem 2rem;
-      gap: 2rem;
-      box-shadow: var(--shadow-lg);
-      border-top: 1px solid var(--color-border);
+      padding: 1.5rem 2rem 2rem 2rem;
+      gap: 0;
+      border: 2px solid var(--color-primary);
+      border-top: none;
+      box-shadow: 8px 8px 0px var(--color-primary);
       opacity: 0;
       visibility: hidden;
       transform: translateY(-10px);
@@ -393,29 +417,48 @@
     }
 
     .mobile-checkbox:checked ~ .mobile-toggle-btn .hamburger-line:nth-child(1) {
-      transform: translateY(8px) rotate(45deg);
+      transform: translateY(8.5px) rotate(45deg);
     }
     .mobile-checkbox:checked ~ .mobile-toggle-btn .hamburger-line:nth-child(2) {
       opacity: 0;
       transform: translateX(10px);
     }
     .mobile-checkbox:checked ~ .mobile-toggle-btn .hamburger-line:nth-child(3) {
-      transform: translateY(-8px) rotate(-45deg);
+      transform: translateY(-8.5px) rotate(-45deg);
       width: 100%;
     }
 
-    .nav-list { flex-direction: column; gap: 0.5rem; }
-
-    .nav-item { width: 100%; }
-    .nav-item > a {
-      padding: 1rem 0;
-      font-size: 1.05rem;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.04);
-      justify-content: space-between;
+    .nav-list { 
+      flex-direction: column; 
+      gap: 0; 
+      border-top: 2px solid var(--color-border-light);
+      margin-top: 1rem;
     }
 
-    /* .has-dropdown > a::after { transform: rotate(45deg) scale(1.2); }
-    .has-dropdown:hover > a::after { transform: rotate(45deg) scale(1.2); }
+    .nav-item { width: 100%; border-bottom: 2px solid var(--color-border-light); }
+    .nav-item:last-child { border-bottom: none; }
+    
+    .nav-item > a {
+      padding: 1.25rem 0.75rem;
+      font-size: 1.1rem;
+      border-bottom: none;
+      justify-content: space-between;
+    }
+    .nav-item > a:hover {
+      color: var(--color-accent);
+      background: var(--color-bg-light);
+      padding-left: 1rem;
+      padding-right: 1rem;
+      margin: 0 -1rem;
+    }
+
+    .has-dropdown > a::after {
+      transform: rotate(45deg) scale(1.2);
+      margin-bottom: 0;
+    }
+    .has-dropdown:hover > a::after {
+      transform: rotate(-135deg) scale(1.2);
+    }
 
     .dropdown {
       position: static;
@@ -423,17 +466,35 @@
       visibility: visible;
       transform: none;
       box-shadow: none;
-      border: none;
+      border: 2px solid var(--color-border-light);
+      border-top: none;
       background: var(--color-bg-light);
       padding: 0.5rem;
-      margin-top: 0.5rem;
-      border-radius: var(--radius-md);
-      display: block;
+      margin-bottom: 1rem;
+      border-radius: 0;
+      display: none;
       pointer-events: auto;
     }
-    .dropdown li a:hover { padding-left: 1rem; } */
+    .dropdown::before { display: none; }
 
-    .nav-actions { margin-top: 0.5rem; }
+    .nav-item:hover .dropdown,
+    .nav-item:focus-within .dropdown {
+      display: block;
+    }
+
+    .dropdown li a {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 2px solid transparent;
+    }
+    .dropdown li a:hover {
+      background: #ffffff;
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+      padding-left: 1.25rem;
+    }
+
+    .nav-actions { margin-top: 1.5rem; }
     .nav-actions .cta-btn { width: 100%; padding: 1rem; }
   }
 </style>

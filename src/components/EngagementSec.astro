@@ -1,6 +1,6 @@
 ---
 // EngagementSec.astro
-// Section "Notre mission" — style moderne inspiré de Corus International
+// Section "Notre mission" — Style Square UI / Neo-Brutalist
 // Sans JavaScript, CSS encapsulé.
 
 const tempImageUrl =
@@ -30,11 +30,6 @@ const engagements = [
     <!-- En-tête -->
     <header class="section-header">
       <h2 class="section-title">Agir autrement pour des résultats durables</h2>
-      <!-- <p class="section-subtitle">
-        Nous luttons pour l'amélioration de l'état de Santé des populations, 
-        dans toutes ses formes possibles. Nous croyons que chaque humain est doté d'un potentiel qui puisse lui permettre de donner sa singularité comme un atout au développement physique,
-        psychique et social de la communauté.
-      </p> -->
     </header>
 
     <div class="layout">
@@ -48,16 +43,6 @@ const engagements = [
             loading="lazy"
           />
         </div>
-
-        <!-- <div class="stat-card stat-primary">
-          <span class="stat-value">100M+</span>
-          <span class="stat-label">Vies impactées</span>
-        </div>
-
-        <div class="stat-card stat-secondary">
-          <span class="stat-value">25+</span>
-          <span class="stat-label">Pays</span>
-        </div> -->
       </div>
 
       <!-- Colonne engagements -->
@@ -75,7 +60,7 @@ const engagements = [
           }
         </ul>
 
-        <a class="btn btn-primary" href="/fr/who-we-are">
+        <a class="btn btn-primary" href="/about/about-us">
           En savoir plus sur nous
           <svg
             class="arrow-icon"
@@ -84,8 +69,8 @@ const engagements = [
             fill="none"
             stroke="currentColor"
             stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            stroke-linecap="square"
+            stroke-linejoin="miter"
             aria-hidden="true"
           >
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -98,26 +83,31 @@ const engagements = [
 </section>
 
 <style>
-  /* --- DESIGN TOKENS --- */
+  /* --- DESIGN TOKENS (Square UI) --- */
   .engagements {
-    --text-main: #1e293b;
-    --text-muted: #64748b;
+    --color-primary: #022c43;
+    --color-text: #0f172a;
+    --color-text-muted: #475569;
+    --color-bg: #f1f5f9;
+    --color-white: #ffffff;
+    
     --blue: #009cb4;
     --orange: #eb690b;
     --green: #48a23f;
-    --bg-section: #f8fafc;
-    --white: #ffffff;
-    --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
-    --shadow-lg: 0 24px 40px -12px rgb(0 0 0 / 0.18);
-    --radius-lg: 20px;
-    --radius-md: 12px;
-    --ease: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    background-color: var(--bg-section);
+    /* Strict zero radius */
+    --radius: 0px;
+
+    /* Hard, offset shadows for strict Square UI */
+    --shadow-hard: 4px 4px 0px var(--color-primary);
+    --shadow-hard-lg: 7px 7px 0px var(--color-primary);
+    
+    --ease: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    background-color: var(--color-bg);
     padding: clamp(4rem, 8vw, 7rem) 1.5rem;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    color: var(--text-main);
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--color-text);
     overflow: hidden;
   }
 
@@ -137,15 +127,8 @@ const engagements = [
     font-size: clamp(1.9rem, 4vw, 2.6rem);
     font-weight: 800;
     line-height: 1.15;
-    color: #64748b;
-    letter-spacing: 0.02em;
-    margin: 0 0 1rem;
-  }
-
-  .section-subtitle {
-    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
-    line-height: 1.65;
-    color: #64748b;
+    color: var(--color-primary);
+    letter-spacing: -0.02em;
     margin: 0;
   }
 
@@ -170,10 +153,18 @@ const engagements = [
   }
 
   .image-wrapper {
-    box-shadow: var(--shadow-lg);
+    border: 3px solid var(--color-primary);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hard-lg);
     overflow: hidden;
     aspect-ratio: 4 / 3;
     background-color: #cbd5e1;
+    transition: var(--ease);
+  }
+
+  .image-wrapper:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 10px 10px 0px var(--color-primary);
   }
 
   .feature-image {
@@ -181,58 +172,12 @@ const engagements = [
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: var(--ease);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .image-wrapper:hover .feature-image {
-    transform: scale(1.05);
+    transform: scale(1.03);
   }
-
-  /* Cartes de statistiques flottantes */
-  /* .stat-card {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 1.5rem;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    background: var(--white);
-  }
-
-  .stat-primary {
-    bottom: 1.5rem;
-    left: -1rem;
-  }
-
-  .stat-secondary {
-    top: 1.5rem;
-    right: -1rem;
-  }
-
-  .stat-value {
-    font-size: 1.75rem;
-    font-weight: 800;
-    line-height: 1;
-    color: var(--orange);
-  }
-
-  .stat-secondary .stat-value {
-    color: var(--blue);
-  }
-
-  .stat-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 0.35rem;
-    color: var(--text-muted);
-  }
-
-  @media (max-width: 480px) {
-    .stat-primary { left: 0.75rem; }
-    .stat-secondary { right: 0.75rem; }
-  } */
 
   /* --- COLONNE TEXTE --- */
   .text-column {
@@ -247,46 +192,38 @@ const engagements = [
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.5rem;
   }
 
   .engagement-card {
     display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    background-color: transparent;
-    box-shadow: none;
-    padding: 0.75rem 0 0.75rem 1.5rem;
-    border-left: 4px solid transparent;
+    flex-direction: column;
+    gap: 0.75rem;
+    background-color: var(--color-white);
+    border: 2px solid var(--color-primary);
+    border-left-width: 6px; /* Accent color will override this */
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hard);
+    padding: 1.5rem;
     transition: var(--ease);
+    position: relative;
   }
 
   .engagement-card:hover {
-    transform: translateX(6px);
-    box-shadow: none;
+    transform: translate(-3px, -3px);
+    box-shadow: var(--shadow-hard-lg);
   }
 
   .accent-blue { border-left-color: var(--blue); }
   .accent-orange { border-left-color: var(--orange); }
   .accent-green { border-left-color: var(--green); }
 
-  .card-num {
-    font-size: 1.5rem;
-    font-weight: 800;
-    line-height: 1;
-    opacity: 0.35;
-  }
-
-  .accent-blue .card-num { color: var(--blue); }
-  .accent-orange .card-num { color: var(--orange); }
-  .accent-green .card-num { color: var(--green); }
-
   .card-title {
-    font-size: 2.25rem;
+    font-size: 1.25rem;
     font-weight: 800;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    margin: 0 0 0.6rem;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--color-primary);
   }
 
   .accent-blue .card-title { color: var(--blue); }
@@ -294,10 +231,11 @@ const engagements = [
   .accent-green .card-title { color: var(--green); }
 
   .card-text {
-    font-size: 1.0625rem;
+    font-size: 1.05rem;
     line-height: 1.65;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
     margin: 0;
+    font-weight: 500;
   }
 
   /* --- BOUTON --- */
@@ -306,46 +244,73 @@ const engagements = [
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    padding: 0.95rem 2.25rem;
+    padding: 1rem 2rem;
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
     cursor: pointer;
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hard);
     transition: var(--ease);
     align-self: flex-start;
+    letter-spacing: 0.02em;
+  }
+
+  /* Tactile press effect */
+  .btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px var(--color-primary);
   }
 
   .btn-primary {
-    background-color: var(--text-main);
-    color: var(--white);
-    border: 2px solid var(--text-main);
-    box-shadow: var(--shadow-sm);
+    background-color: var(--color-primary);
+    color: var(--color-white);
   }
 
   .btn-primary:hover {
-    background-color: var(--white);
-    color: var(--text-main);
-    border-color: var(--text-main);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-hard-lg);
   }
 
   .arrow-icon {
     width: 1.25rem;
     height: 1.25rem;
-    transition: var(--ease);
+    transition: transform 0.2s ease;
   }
 
   .btn-primary:hover .arrow-icon {
     transform: translateX(4px);
   }
 
+  /* --- RESPONSIVE --- */
   @media (max-width: 768px) {
+    .engagements {
+      padding: 3rem 1.25rem;
+    }
+
+    .layout {
+      gap: 2.5rem;
+    }
+
     .btn {
       width: 100%;
+      align-self: stretch;
     }
+    
+    .btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--color-primary);
+    }
+
     .card-title {
-      font-size: 1.5rem;
+      font-size: 1.15rem;
+    }
+    
+    .card-text {
+      font-size: 0.95rem;
     }
   }
 </style>

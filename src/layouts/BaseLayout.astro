@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title?: string;
@@ -21,7 +22,8 @@ const { title = 'Corpus Sana' } = Astro.props;
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
@@ -30,6 +32,7 @@ const { title = 'Corpus Sana' } = Astro.props;
     <main>
       <slot />
     </main>
+    <Footer />
   </body>
 </html>
 
@@ -43,7 +46,7 @@ const { title = 'Corpus Sana' } = Astro.props;
   html, body {
     width: 100%;
     min-height: 100vh;
-    font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
     color: #1a1a2e;
     background: linear-gradient(135deg, #f8f9fc 0%, #eef1f7 50%, #f8f9fc 100%);
     background-attachment: fixed;
@@ -59,7 +62,7 @@ const { title = 'Corpus Sana' } = Astro.props;
   }
   
   h1, h2, h4, h5, h6 {
-    font-family: 'Bebas Neue', system-ui, -apple-system, sans-serif;
+    font-family: 'Montserrat', sans-serif;
   }
 
   main {

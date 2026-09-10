@@ -9,40 +9,53 @@ import slide3 from "../assets/hero/slide-3.jpg";
 <section class="hero">
   <!-- CSS-Only Background Slider -->
   <div class="hero-slider">
-    <!-- Replace these src URLs with your actual images in the public folder -->
     <Image src={slide1} alt="Community support" class="slide" widths={[768, 1280, 1920]} sizes="100vw" format="webp" quality={75} loading="eager" />
     <Image src={slide2} alt="Global health initiative" class="slide" widths={[768, 1280, 1920]} sizes="100vw" format="webp" quality={75} loading="lazy" />
     <Image src={slide3} alt="Team working together" class="slide" widths={[768, 1280, 1920]} sizes="100vw" format="webp" quality={75} loading="lazy" />
-
   </div>
 
-  <!-- Gradient Overlay for Text Readability -->
+  <!-- Solid Color Overlay for Text Readability (No Gradients) -->
   <div class="hero-overlay"></div>
 
   <!-- Hero Content -->
   <div class="hero-content">
-    <h1>Transfromer les communautés pour un avenir plus sain.</h1>
+    
+    <h1>Transformer les communautés pour un avenir plus sain.</h1>
     <p>Rejoignez notre mission pour offrir des solutions de santé durables et accompagner les populations vulnérables à travers la RDC.</p>
     
     <div class="hero-actions">
       <a href="/donate" class="btn btn-primary">Faire un don</a>
-      <a href="/about" class="btn btn-outline">Notre mission</a>
+      <a href="/about/about-us" class="btn btn-outline">Notre mission</a>
     </div>
   </div>
 </section>
 
 <style>
-  /* --- Base Hero Setup --- */
+  /* --- CSS Variables for Square UI Consistency --- */
   .hero {
+    --color-primary: #022c43;
+    --color-accent: #eb690b;
+    --color-white: #ffffff;
+    --color-text-light: #e2e8f0;
+    
+    /* Hard, offset shadows for strict Square UI */
+    --shadow-hard: 4px 4px 0px var(--color-primary);
+    --shadow-hard-lg: 6px 6px 0px var(--color-primary);
+    --shadow-hard-white: 4px 4px 0px rgba(255, 255, 255, 0.4);
+    
+    /* Strict zero radius */
+    --radius: 0px;
+
     position: relative;
     width: 100%;
-    height: 85vh; /* Adjust height as needed */
+    height: 85vh;
     min-height: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background-color: #1a1a1a;
+    background-color: var(--color-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   /* --- CSS-Only Ken Burns Slider --- */
@@ -73,43 +86,20 @@ import slide3 from "../assets/hero/slide-3.jpg";
   .slide:nth-child(3) { animation-delay: 12s; }
 
   @keyframes kenburns {
-    0% {
-      opacity: 0;
-      transform: scale(1);
-    }
-    5% {
-      opacity: 1;
-    }
-    33% {
-      opacity: 1;
-    }
-    38% {
-      opacity: 0;
-      transform: scale(1.08); /* The zoom effect */
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1);
-    }
+    0% { opacity: 0; transform: scale(1); }
+    5% { opacity: 1; }
+    33% { opacity: 1; }
+    38% { opacity: 0; transform: scale(1.08); }
+    100% { opacity: 0; transform: scale(1); }
   }
 
-  /* --- Overlay --- */
+  /* --- Solid Overlay (NO GRADIENTS) --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
     z-index: 2;
-    /* Dark gradient from bottom to top, and slightly from the left */
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.8) 0%,
-      rgba(0, 0, 0, 0.3) 50%,
-      rgba(0, 0, 0, 0.1) 100%
-    ),
-    linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0.6) 0%,
-      rgba(0, 0, 0, 0.1) 100%
-    );
+    /* Solid dark navy tint for maximum readability without gradients */
+    background-color: rgba(2, 44, 67, 0.88);
   }
 
   /* --- Content Styling --- */
@@ -118,129 +108,153 @@ import slide3 from "../assets/hero/slide-3.jpg";
     z-index: 3;
     max-width: 900px;
     padding: 0 2rem;
-    letter-spacing: 0.04em;
-    text-align: center; /* Change to left for a left-aligned hero */
-    color: #ffffff;
+    text-align: center;
+    color: var(--color-white);
     display: flex;
     flex-direction: column;
-    align-items: center; /* Change to flex-start for left-aligned */
+    align-items: center;
     gap: 1.5rem;
   }
 
   .hero-content h1 {
-    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-size: clamp(3rem, 6vw, 5.5rem);
     font-weight: 800;
     line-height: 1.05;
     margin: 0;
     text-wrap: balance;
+    letter-spacing: -0.02em;
   }
 
   .hero-content p {
-    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    font-size: clamp(1.125rem, 2vw, 1.35rem);
     line-height: 1.7;
-    max-width: 800px;
+    max-width: 750px;
     margin: 0;
-    color: #e2e8f0;
+    color: var(--color-text-light);
+    font-weight: 500;
   }
 
-  /* --- Buttons --- */
+  /* --- Square Buttons --- */
   .hero-actions {
     display: flex;
-    gap: 1rem;
+    gap: 1.25rem;
     margin-top: 1rem;
     flex-wrap: wrap;
     justify-content: center;
   }
 
   .btn {
-    display: inline-block;
-    padding: 1rem 2rem;
-    font-size: 1.125rem;
-    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2.25rem;
+    font-size: 1.1rem;
+    font-weight: 700;
     text-decoration: none;
-    transition: all 0.3s ease;
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius); /* STRICT ZERO RADIUS */
+    box-shadow: var(--shadow-hard);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+
+  /* Tactile press effect */
+  .btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px var(--color-primary);
   }
 
   .btn-primary {
-    background-color: #d94b2b; /* Corus-style warm accent color */
-    color: white;
-    border: 1px solid #d94b2b;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border-color: var(--color-primary);
   }
 
   .btn-primary:hover {
-    background-color: #b83a1f;
-    border-color: #b83a1f;
-    transform: translateY(-2px);
+    background-color: var(--color-white);
+    color: var(--color-accent);
+    border-color: var(--color-primary);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-hard-lg);
   }
 
   .btn-outline {
     background-color: transparent;
-    color: white;
-    border: 2px solid white;
+    color: var(--color-white);
+    border-color: var(--color-white);
+    box-shadow: var(--shadow-hard-white);
   }
 
   .btn-outline:hover {
-    background-color: white;
-    color: #1a1a1a;
-    transform: translateY(-2px);
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-hard-lg);
   }
 
-    /* --- Mobile Adjustments --- */
-    @media (max-width: 768px) {
+  /* --- Mobile Adjustments --- */
+  @media (max-width: 768px) {
     .hero {
-        height: 100vh;
-        min-height: 400px;
+      height: 100vh;
+      min-height: 500px;
     }
 
     .hero-content {
-        padding: 0 1.10rem;
-        gap: 1.10rem;
+      padding: 0 1.5rem;
+      gap: 1.25rem;
     }
 
-    .badge {
-        font-size: 0.75rem;
-        padding: 0.4rem 0.85rem;
+    .hero-badge {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.85rem;
     }
 
     .hero-content h1 {
-        font-size: clamp(5rem, 8vw, 5rem);
-        line-height: 1.1;
+      font-size: clamp(2.5rem, 8vw, 3.5rem);
+      line-height: 1.1;
     }
 
     .hero-content p {
-        font-size: 1rem;
-        line-height: 1.6;
-        max-width: 100%;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 100%;
     }
 
     .hero-actions {
-        flex-direction: column;
-        width: 100%;
-        gap: 0.75rem;
-        margin-top: 0.5rem;
+      flex-direction: column;
+      width: 100%;
+      gap: 1rem;
+      margin-top: 0.5rem;
     }
 
     .btn {
-        width: 100%;
-        text-align: center;
-        padding: 0.9rem 1.5rem;
-        font-size: 1rem;
+      width: 100%;
+      text-align: center;
+      padding: 1rem 1.5rem;
+      font-size: 1.05rem;
     }
+    
+    /* Reset active state transform on mobile to prevent sticky hover issues */
+    .btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--color-primary);
     }
+  }
 
-    /* --- Small phones --- */
-    @media (max-width: 400px) {
+  @media (max-width: 400px) {
     .hero-content h1 {
-        font-size: 2.96rem;
+      font-size: 2.25rem;
     }
 
     .hero-content p {
-        font-size: 0.9rem;
+      font-size: 0.95rem;
     }
 
     .btn {
-        padding: 0.8rem 1.25rem;
-        font-size: 0.9rem;
+      padding: 0.9rem 1.25rem;
+      font-size: 0.95rem;
     }
-    }
+  }
 </style>
