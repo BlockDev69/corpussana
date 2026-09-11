@@ -1,0 +1,16 @@
+[
+  {
+    "id": "programme-kivu",
+    "title": "Lancement du programme de santé au Kivu",
+    "author": "Corpus Sana",
+    "summary": "Une nouvelle initiative pour rapprocher les soins de proximité des populations les plus isolées de la région.",
+    "date": "2026-06-12"
+  },
+  {
+    "id": "donnee-sante",
+    "title": "Pourquoi la donnée change la santé publique",
+    "author": "Dr. Josué Mupemba",
+    "summary": "Retour sur l'impact des outils numériques et de l'analyse de données dans le suivi des indicateurs de santé.",
+    "date": "2026-06-05"
+  }
+]

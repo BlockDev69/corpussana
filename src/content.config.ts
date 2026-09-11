@@ -9,7 +9,9 @@ const articles = defineCollection({
     title: z.string(),
     author: z.string(),
     summary: z.string(),
-    date: z.string()
+    date: z.string(),
+    image: z.string().optional(), // Optional: for the carousel card
+    color: z.enum(["blue", "orange", "green"]).optional() // Optional: for the accent
   })
 })
 

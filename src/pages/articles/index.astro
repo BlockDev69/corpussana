@@ -1,0 +1,124 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+// Fetch all articles from the collection
+const articles = await getCollection("articles");
+
+// Sort by date descending (newest first)
+articles.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+---
+
+<BaseLayout title="Nos Publications - Corpus Sana">
+  <section class="articles-listing">
+    <div class="container">
+      <header class="section-header">
+        <span class="section-eyebrow">Actualités & Blog</span>
+        <h1 class="section-title">Nos Dernières Publications</h1>
+        <p class="section-subtitle">
+          Suivez nos actions sur le terrain, nos réflexions et les temps forts de notre engagement.
+        </p>
+      </header>
+
+      <div class="articles-grid">
+        {articles.map((article) => {
+          const formattedDate = new Date(article.data.date).toLocaleDateString('fr-FR', { 
+            year: 'numeric', month: 'long', day: 'numeric' 
+          });
+          
+          return (
+            <article class="article-card">
+              <div class="card-body">
+                <time class="card-date">{formattedDate}</time>
+                <h2 class="card-title">
+                  <a href={`/articles/${article.data.id}`}>{article.data.title}</a>
+                </h2>
+                <p class="card-summary">{article.data.summary}</p>
+                <div class="card-footer">
+                  <span class="card-author">Par {article.data.author}</span>
+                  <a href={`/articles/${article.data.id}`}>
+                    <span class="card-link">
+                      Lire l'article
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .articles-listing {
+    padding: clamp(4rem, 8vw, 7rem) 1.5rem;
+    background: var(--bg-soft, #f1f5f9);
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  
+  .section-header { text-align: center; max-width: 700px; margin: 0 auto 3.5rem; }
+  .section-eyebrow {
+    display: inline-flex; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--blue, #009cb4); margin-bottom: 1rem;
+  }
+  .section-title { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; color: var(--navy, #022c43); margin: 0 0 1rem; }
+  .section-subtitle { font-size: 1.08rem; line-height: 1.65; color: var(--text-muted, #475569); margin: 0; }
+
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .article-card {
+    background: var(--white, #ffffff);
+    border: 2px solid var(--navy, #022c43);
+    border-radius: 0; /* Strict square */
+    box-shadow: 4px 4px 0px var(--navy, #022c43);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+  }
+  .article-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0px var(--navy, #022c43);
+  }
+
+  .card-body { padding: 1.75rem; display: flex; flex-direction: column; flex: 1; }
+  .card-date { font-size: 0.8rem; font-weight: 600; color: var(--text-muted, #475569); text-transform: uppercase; letter-spacing: 0.05em; }
+  
+  .card-title {
+    font-size: 1.35rem; font-weight: 800; line-height: 1.25; margin: 0.75rem 0;
+  }
+  .card-title a {
+    color: var(--navy, #022c43); text-decoration: none; transition: color 0.2s;
+  }
+  .card-title a:hover { color: var(--blue, #009cb4); }
+
+  .card-summary {
+    font-size: 1rem; line-height: 1.6; color: var(--text-muted, #475569); margin: 0 0 1.5rem; flex: 1;
+  }
+
+  .card-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 1rem; border-top: 2px solid var(--border-light, #cbd5e1);
+  }
+  .card-author { font-size: 0.85rem; font-weight: 600; color: var(--navy, #022c43); }
+  
+  .card-link {
+    display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;
+    font-weight: 700; color: var(--blue, #009cb4); text-decoration: none;
+  }
+  .card-link svg { width: 14px; height: 14px; transition: transform 0.2s; }
+  .article-card:hover .card-link svg { transform: translateX(4px); }
+
+  @media (max-width: 600px) {
+    .card-footer { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  }
+</style>

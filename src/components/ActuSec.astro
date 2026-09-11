@@ -1,65 +1,18 @@
 ---
-// ActuSec.astro
-// Section Actualités & Blog — Style Square UI / Neo-Brutalist
-// Boutons de scroll (desktop) + scroll horizontal tactile (mobile)
+import { getCollection } from "astro:content";
 
-const articles = [
-  {
-    type: "Actualité",
-    color: "blue",
-    date: "12 juin 2026",
-    title: "Lancement du programme de santé communautaire au Kivu",
-    excerpt:
-      "Une nouvelle initiative pour rapprocher les soins de proximité des populations les plus isolées.",
-    image:
-      "https://images.unsplash.com/photo-1542884748-2b87b36c6b90?auto=format&fit=crop&w=800&q=80",
-    href: "/fr/actu/programme-kivu",
-  },
-  {
-    type: "Blog",
-    color: "orange",
-    date: "5 juin 2026",
-    title: "Pourquoi la donnée change la santé publique",
-    excerpt:
-      "Retour sur l'impact des outils numériques dans le suivi des indicateurs de santé.",
-    image:
-      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80",
-    href: "/fr/blog/donnee-sante",
-  },
-  {
-    type: "Actualité",
-    color: "green",
-    date: "28 mai 2026",
-    title: "Partenariat avec les acteurs locaux de Goma",
-    excerpt:
-      "Un accord stratégique pour renforcer l'accès aux soins essentiels.",
-    image:
-      "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80",
-    href: "/fr/actu/partenariat-goma",
-  },
-  {
-    type: "Blog",
-    color: "blue",
-    date: "15 mai 2026",
-    title: "Sur le terrain : une journée avec nos équipes",
-    excerpt:
-      "Immersion auprès des soignants qui font vivre nos programmes au quotidien.",
-    image:
-      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80",
-    href: "/fr/blog/journee-terrain",
-  },
-  {
-    type: "Actualité",
-    color: "orange",
-    date: "2 mai 2026",
-    title: "Campagne de vaccination : 50 000 personnes touchées",
-    excerpt:
-      "Bilan d'une opération d'envergure menée dans plusieurs provinces.",
-    image:
-      "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=800&q=80",
-    href: "/fr/actu/campagne-vaccination",
-  },
-];
+// 1. Fetch all articles from the collection
+const allArticles = await getCollection("articles");
+
+// 2. Sort by date descending (newest first)
+allArticles.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// 3. Take only the latest 4 for the carousel
+const articles = allArticles.slice(0, 4);
+
+// Fallbacks for visual consistency if image/color are missing in JSON
+const fallbackColors = ["blue", "orange", "green", "blue"];
+const defaultImage = "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80";
 ---
 
 <section class="actu">
@@ -94,38 +47,46 @@ const articles = [
     <!-- Piste de cartes scrollable -->
     <div class="cards-track" id="actuTrack">
       {
-        articles.map((article) => (
-          <article class={`actu-card accent-${article.color}`}>
-            <a href={article.href} class="card-link">
-              <div class="card-media">
-                <img src={article.image} alt={article.title} loading="lazy" />
-              </div>
-              <div class="card-body">
-                <span class="card-date">{article.date}</span>
-                <h3 class="card-title">{article.title}</h3>
-                <p class="card-excerpt">{article.excerpt}</p>
-                <span class="card-cta">
-                  Lire la suite
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </span>
-              </div>
-            </a>
-          </article>
-        ))
+        articles.map((article, index) => {
+          const articleColor = article.data.color || fallbackColors[index % fallbackColors.length];
+          const articleImage = article.data.image || defaultImage;
+          const formattedDate = new Date(article.data.date).toLocaleDateString('fr-FR', { 
+            year: 'numeric', month: 'long', day: 'numeric' 
+          });
+
+          return (
+            <article class={`actu-card accent-${articleColor}`}>
+              <a href={`/articles/${article.data.id}`} class="card-link">
+                <div class="card-media">
+                  <img src={articleImage} alt={article.data.title} loading="lazy" />
+                </div>
+                <div class="card-body">
+                  <span class="card-date">{formattedDate}</span>
+                  <h3 class="card-title">{article.data.title}</h3>
+                  <p class="card-excerpt">{article.data.summary}</p>
+                  <span class="card-cta">
+                    Lire la suite
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            </article>
+          );
+        })
       }
     </div>
 
     <div class="actu-footer">
-        <a class="btn-all" href="/fr/actu">
-            Voir toutes les actualités
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-        </a>
+      <a class="btn-all" href="/articles">
+        Voir toutes les actualités
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
     </div>
   </div>
 </section>
@@ -138,7 +99,7 @@ const articles = [
     btn.addEventListener("click", () => {
       if (!track) return;
       const card = track.querySelector<HTMLElement>(".actu-card");
-      const gap = 24;
+      const gap = 24; // Matches CSS gap
       const amount = card ? card.offsetWidth + gap : track.clientWidth * 0.8;
       const dir = btn.dataset.dir === "next" ? 1 : -1;
       track.scrollBy({ left: amount * dir, behavior: "smooth" });
@@ -158,13 +119,9 @@ const articles = [
     --text-light: #e2e8f0;
     --text-muted: #94a3b8;
     
-    /* Strict zero radius */
     --radius: 0px;
-    
-    /* Hard, offset shadows for dark mode */
     --shadow-hard: 4px 4px 0px rgba(0, 0, 0, 0.4);
     --shadow-hard-lg: 7px 7px 0px rgba(0, 0, 0, 0.6);
-    
     --ease: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     background-color: var(--navy);
@@ -189,9 +146,7 @@ const articles = [
     margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
   }
 
-  .header-text {
-    max-width: 640px;
-  }
+  .header-text { max-width: 640px; }
 
   .section-title {
     font-size: clamp(1.9rem, 4vw, 2.6rem);
@@ -205,8 +160,9 @@ const articles = [
   .section-subtitle {
     font-size: 1.125rem;
     line-height: 1.65;
-    color: var(--text-muted);
+    color: var(--text-light);
     margin: 0;
+    font-weight: 500;
   }
 
   /* --- BOUTONS DE SCROLL --- */
@@ -231,10 +187,7 @@ const articles = [
     transition: var(--ease);
   }
 
-  .scroll-btn svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
+  .scroll-btn svg { width: 1.25rem; height: 1.25rem; }
 
   .scroll-btn:hover {
     background-color: var(--white);
@@ -258,12 +211,10 @@ const articles = [
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     padding-bottom: 1rem;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
   }
 
-  .cards-track::-webkit-scrollbar {
-    display: none; /* Chrome / Safari */
-  }
+  .cards-track::-webkit-scrollbar { display: none; }
 
   /* --- CARTE --- */
   .actu-card {
@@ -282,13 +233,9 @@ const articles = [
     box-shadow: var(--shadow-hard-lg);
   }
 
-  .accent-blue { border-bottom-color: var(--blue); }
-  .accent-orange { border-bottom-color: var(--orange); }
-  .accent-green { border-bottom-color: var(--green); }
-
-  .accent-blue:hover { border-color: var(--blue); }
-  .accent-orange:hover { border-color: var(--orange); }
-  .accent-green:hover { border-color: var(--green); }
+  .accent-blue:hover { border-color: var(--blue); border-bottom-color: var(--blue); }
+  .accent-orange:hover { border-color: var(--orange); border-bottom-color: var(--orange); }
+  .accent-green:hover { border-color: var(--green); border-bottom-color: var(--green); }
 
   .card-link {
     display: flex;
@@ -314,9 +261,7 @@ const articles = [
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .actu-card:hover .card-media img {
-    transform: scale(1.03);
-  }
+  .actu-card:hover .card-media img { transform: scale(1.03); }
 
   .card-body {
     display: flex;
@@ -347,6 +292,8 @@ const articles = [
     line-height: 1.6;
     color: var(--text-light);
     margin: 0;
+    font-weight: 500;
+    flex: 1;
   }
 
   .card-cta {
@@ -363,15 +310,8 @@ const articles = [
   .accent-orange .card-cta { color: var(--orange); }
   .accent-green .card-cta { color: var(--green); }
 
-  .card-cta svg {
-    width: 1rem;
-    height: 1rem;
-    transition: var(--ease);
-  }
-
-  .actu-card:hover .card-cta svg {
-    transform: translateX(4px);
-  }
+  .card-cta svg { width: 1rem; height: 1rem; transition: var(--ease); }
+  .actu-card:hover .card-cta svg { transform: translateX(4px); }
 
   /* --- FOOTER & BOUTON GLOBAL --- */
   .actu-footer {
@@ -399,11 +339,7 @@ const articles = [
     letter-spacing: 0.02em;
   }
 
-  .btn-all svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    transition: var(--ease);
-  }
+  .btn-all svg { width: 1.25rem; height: 1.25rem; transition: var(--ease); }
 
   .btn-all:hover {
     background-color: var(--navy);
@@ -418,51 +354,24 @@ const articles = [
     box-shadow: 2px 2px 0px var(--white);
   }
 
-  /* --- MOBILE : scroll horizontal au doigt --- */
+  /* --- MOBILE --- */
   @media (max-width: 768px) {
-    .section-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .scroll-controls {
-      display: none; /* on navigue au doigt sur mobile */
-    }
+    .section-header { flex-direction: column; align-items: flex-start; }
+    .scroll-controls { display: none; }
 
     .cards-track {
       grid-auto-columns: 85%;
       gap: 1rem;
-      /* léger débordement pour suggérer le swipe */
       margin: 0 -1.5rem;
       padding: 0 1.5rem 1rem;
     }
 
-    .card-title {
-      font-size: 1.1rem;
-      line-height: 1.3;
-    }
-
-    .card-excerpt {
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    .card-cta {
-      font-size: 0.85rem;
-    }
-
-    .card-body {
-      gap: 0.45rem;
-      padding: 1.25rem 1.25rem 1.5rem;
-    }
-
-    .btn-all {
-      width: 100%;
-    }
+    .card-title { font-size: 1.1rem; }
+    .card-excerpt { font-size: 0.9rem; }
+    .card-cta { font-size: 0.85rem; }
+    .card-body { gap: 0.45rem; padding: 1.25rem 1.25rem 1.5rem; }
     
-    .btn-all:active {
-      transform: translate(1px, 1px);
-      box-shadow: 1px 1px 0px var(--white);
-    }
+    .btn-all { width: 100%; }
+    .btn-all:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px var(--white); }
   }
 </style>
