@@ -50,13 +50,13 @@ const defaultImage = "https://images.unsplash.com/photo-1576091160550-2173dba999
         articles.map((article, index) => {
           const articleColor = article.data.color || fallbackColors[index % fallbackColors.length];
           const articleImage = article.data.image || defaultImage;
-          const formattedDate = new Date(article.data.date).toLocaleDateString('fr-FR', { 
-            year: 'numeric', month: 'long', day: 'numeric' 
-          });
+          const formattedDate = article.data.date.toLocaleDateString('fr-FR', {
+            year: 'numeric', month: 'long', day: 'numeric'
+          })
 
           return (
             <article class={`actu-card accent-${articleColor}`}>
-              <a href={`/articles/${article.data.id}`} class="card-link">
+              <a href={`/articles/${article.id}`} class="card-link">
                 <div class="card-media">
                   <img src={articleImage} alt={article.data.title} loading="lazy" />
                 </div>

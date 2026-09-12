@@ -6,7 +6,7 @@ import { getCollection } from "astro:content";
 const articles = await getCollection("articles");
 
 // Sort by date descending (newest first)
-articles.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
 <BaseLayout title="Nos Publications - Corpus Sana">
@@ -22,7 +22,7 @@ articles.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).
 
       <div class="articles-grid">
         {articles.map((article) => {
-          const formattedDate = new Date(article.data.date).toLocaleDateString('fr-FR', { 
+          const formattedDate = article.data.date.toLocaleDateString('fr-FR', { 
             year: 'numeric', month: 'long', day: 'numeric' 
           });
           
@@ -31,12 +31,12 @@ articles.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).
               <div class="card-body">
                 <time class="card-date">{formattedDate}</time>
                 <h2 class="card-title">
-                  <a href={`/articles/${article.data.id}`}>{article.data.title}</a>
+                  <a href={`/articles/${article.id}`}>{article.data.title}</a>
                 </h2>
                 <p class="card-summary">{article.data.summary}</p>
                 <div class="card-footer">
                   <span class="card-author">Par {article.data.author}</span>
-                  <a href={`/articles/${article.data.id}`}>
+                  <a href={`/articles/${article.id}`}>
                     <span class="card-link">
                       Lire l'article
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">

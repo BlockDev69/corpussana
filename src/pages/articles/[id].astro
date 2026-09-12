@@ -1,19 +1,23 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 // 1. Tell Astro which pages to generate at build time
 export async function getStaticPaths() {
   const articles = await getCollection("articles");
   return articles.map((article) => ({
-    params: { id: article.data.id },
+    params: { id: article.id },
     props: { article },
   }));
 }
 
 // 2. Access the specific article data
 const { article } = Astro.props;
-const formattedDate = new Date(article.data.date).toLocaleDateString('fr-FR', { 
+
+// Render markdown body
+const { Content } = await render(article);
+
+const formattedDate = article.data.date.toLocaleDateString('fr-FR', { 
   year: 'numeric', month: 'long', day: 'numeric' 
 });
 ---
@@ -45,10 +49,12 @@ const formattedDate = new Date(article.data.date).toLocaleDateString('fr-FR', {
         -->
         <p class="lead-text">{article.data.summary}</p>
         
-        <div class="placeholder-content">
-          <p>Le contenu détaillé de cet article sera bientôt disponible.</p>
-          <p><em>(Pour ajouter du texte riche avec des paragraphes, des images et du gras, nous vous recommandons vivement de passer du JSON au Markdown. Voir l'astuce ci-dessous).</em></p>
-        </div>
+        <!-- This renders your Markdown content(h2, p, ul, blockquote, etc.) -->
+        <Content />
+        <!-- <div class="placeholder-content"> -->
+        <!--   <p>Le contenu détaillé de cet article sera bientôt disponible.</p> -->
+        <!--   <p><em>(Pour ajouter du texte riche avec des paragraphes, des images et du gras, nous vous recommandons vivement de passer du JSON au Markdown. Voir l'astuce ci-dessous).</em></p> -->
+        <!-- </div> -->
       </div>
     </div>
   </article>
@@ -91,6 +97,76 @@ const formattedDate = new Date(article.data.date).toLocaleDateString('fr-FR', {
     font-size: 1.25rem; font-weight: 500; color: var(--navy, #022c43);
     border-left: 4px solid var(--orange, #eb690b); padding-left: 1.5rem; margin-bottom: 2.5rem;
   }
+  
+  .square-prose {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-main, #0f172a);
+  }
+
+  .square-prose :global(h2) {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--navy, #022c43);
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--blue, #009cb4);
+  }
+
+  .square-prose :global(h3) {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--navy, #022c43);
+    margin: 2rem 0 0.75rem;
+  }
+
+  .square-prose :global(p) {
+    margin: 0 0 1.5rem;
+  }
+
+  .square-prose :global(strong) {
+    color: var(--navy, #022c43);
+    font-weight: 800;
+    background: var(--orange-light, #fdf0e6);
+    padding: 0 0.2rem;
+  }
+
+  .square-prose :global(ul), .square-prose :global(ol) {
+    margin: 0 0 1.5rem 1.5rem;
+    padding: 0;
+  }
+
+  .square-prose :global(li) {
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  /* Square Brutalist Blockquote */
+  .square-prose :global(blockquote) {
+    margin: 2rem 0;
+    padding: 1.5rem 2rem;
+    background: var(--bg-soft, #f1f5f9);
+    border-left: 6px solid var(--orange, #eb690b);
+    border-top: 2px solid var(--navy, #022c43);
+    border-bottom: 2px solid var(--navy, #022c43);
+    border-right: 2px solid var(--navy, #022c43);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--navy, #022c43);
+    box-shadow: 6px 6px 0px var(--navy, #022c43);
+  }
+
+  .square-prose :global(a) {
+    color: var(--blue, #009cb4);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+  }
+  .square-prose :global(a:hover) {
+    color: var(--orange, #eb690b);
+  }
+
   .placeholder-content {
     padding: 2rem; background: var(--bg-soft, #f1f5f9); border: 2px dashed var(--border-light, #cbd5e1);
   }
