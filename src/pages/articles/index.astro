@@ -1,12 +1,19 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import { turso } from "../../turso";
 
-// Fetch all articles from the collection
-const articles = await getCollection("articles");
+export const prerender = false;
 
-// Sort by date descending (newest first)
-articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const result = await turso.execute({
+  sql: `SELECT slug, title, author, summary, date, image, color
+        FROM articles
+        ORDER BY date DESC
+        limit 50`,
+  args: []
+});
+
+const articles = result.rows;
 ---
 
 <BaseLayout title="Nos Publications - Corpus Sana">
@@ -22,7 +29,7 @@ articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
       <div class="articles-grid">
         {articles.map((article) => {
-          const formattedDate = article.data.date.toLocaleDateString('fr-FR', { 
+        const formattedDate = new Date(article.date).toLocaleDateString('fr-FR', { 
             year: 'numeric', month: 'long', day: 'numeric' 
           });
           
@@ -31,12 +38,12 @@ articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
               <div class="card-body">
                 <time class="card-date">{formattedDate}</time>
                 <h2 class="card-title">
-                  <a href={`/articles/${article.id}`}>{article.data.title}</a>
+                  <a href={`/articles/${article.slug}`}>{article.title}</a>
                 </h2>
-                <p class="card-summary">{article.data.summary}</p>
+                <p class="card-summary">{article.summary}</p>
                 <div class="card-footer">
-                  <span class="card-author">Par {article.data.author}</span>
-                  <a href={`/articles/${article.id}`}>
+                  <span class="card-author">Par {article.author}</span>
+                  <a href={`/articles/${article.slug}`}>
                     <span class="card-link">
                       Lire l'article
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">

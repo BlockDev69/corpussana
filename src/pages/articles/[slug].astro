@@ -1,28 +1,42 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
+import { turso } from "../../turso";
+
+import { marked } from "marked"
+
+export const prerender = false;
 
 // 1. Tell Astro which pages to generate at build time
 export async function getStaticPaths() {
-  const articles = await getCollection("articles");
-  return articles.map((article) => ({
-    params: { id: article.id },
-    props: { article },
-  }));
+  const articles = await turso.execute({
+    sql: "SELECT slug FROM articles",
+    args: []
+  });
 }
 
-// 2. Access the specific article data
-const { article } = Astro.props;
+const { slug } = Astro.params;
 
-// Render markdown body
-const { Content } = await render(article);
-
-const formattedDate = article.data.date.toLocaleDateString('fr-FR', { 
-  year: 'numeric', month: 'long', day: 'numeric' 
+const result = await turso.execute({
+  sql: "SELECT * FROM articles WHERE slug = ?",
+  args: [slug]
 });
+
+const article = result.rows[0];
+
+if (!article) {
+  return Astro.redirect("/404");
+}
+
+const formattedDate = new Date(article.date).toLocaleDateString('fr-FR', { 
+  year: 'numeric', month: 'long', day: 'numeric' 
+  });
+
+// Parse markdown safely
+const htmlContent = marked.parse(article.content);
 ---
 
-<BaseLayout title={article.data.title}>
+<BaseLayout title={article.title}>
   <article class="article-detail">
     <div class="container">
       <a href="/articles" class="back-link">
@@ -35,9 +49,9 @@ const formattedDate = article.data.date.toLocaleDateString('fr-FR', {
 
       <header class="article-header">
         <time class="article-date">{formattedDate}</time>
-        <h1 class="article-title">{article.data.title}</h1>
+        <h1 class="article-title">{article.title}</h1>
         <div class="article-meta">
-          <span class="author-badge">Rédigé par <strong>{article.data.author}</strong></span>
+          <span class="author-badge">Rédigé par <strong>{article.author}</strong></span>
         </div>
       </header>
 
@@ -47,10 +61,10 @@ const formattedDate = article.data.date.toLocaleDateString('fr-FR', {
           For now, we display the summary prominently. 
           See the "Pro Tip" below for handling rich text.
         -->
-        <p class="lead-text">{article.data.summary}</p>
+        <p class="lead-text">{article.summary}</p>
         
         <!-- This renders your Markdown content(h2, p, ul, blockquote, etc.) -->
-        <Content />
+        <div set:html={htmlContent}></div>
         <!-- <div class="placeholder-content"> -->
         <!--   <p>Le contenu détaillé de cet article sera bientôt disponible.</p> -->
         <!--   <p><em>(Pour ajouter du texte riche avec des paragraphes, des images et du gras, nous vous recommandons vivement de passer du JSON au Markdown. Voir l'astuce ci-dessous).</em></p> -->

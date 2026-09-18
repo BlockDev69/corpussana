@@ -1,14 +1,16 @@
 ---
 import { getCollection } from "astro:content";
+import { turso } from "../turso";
 
-// 1. Fetch all articles from the collection
-const allArticles = await getCollection("articles");
+const result = await turso.execute({
+  sql: `SELECT slug, title, summary, date, image, color
+        FROM articles
+        ORDER BY date DESC
+        LIMIT 4`,
+  args: []
+  });
 
-// 2. Sort by date descending (newest first)
-allArticles.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
-
-// 3. Take only the latest 4 for the carousel
-const articles = allArticles.slice(0, 4);
+const articles = result.rows;
 
 // Fallbacks for visual consistency if image/color are missing in JSON
 const fallbackColors = ["blue", "orange", "green", "blue"];
@@ -48,22 +50,22 @@ const defaultImage = "https://images.unsplash.com/photo-1576091160550-2173dba999
     <div class="cards-track" id="actuTrack">
       {
         articles.map((article, index) => {
-          const articleColor = article.data.color || fallbackColors[index % fallbackColors.length];
-          const articleImage = article.data.image || defaultImage;
-          const formattedDate = article.data.date.toLocaleDateString('fr-FR', {
+          const articleColor = article.color || fallbackColors[index % fallbackColors.length];
+          const articleImage = article.image || defaultImage;
+          const formattedDate = new Date(article.date).toLocaleDateString('fr-FR', {
             year: 'numeric', month: 'long', day: 'numeric'
           })
 
           return (
             <article class={`actu-card accent-${articleColor}`}>
-              <a href={`/articles/${article.id}`} class="card-link">
+              <a href={`/articles/${article.slug}`} class="card-link">
                 <div class="card-media">
-                  <img src={articleImage} alt={article.data.title} loading="lazy" />
+                  <img src={articleImage} alt={article.title} loading="lazy" />
                 </div>
                 <div class="card-body">
                   <span class="card-date">{formattedDate}</span>
-                  <h3 class="card-title">{article.data.title}</h3>
-                  <p class="card-excerpt">{article.data.summary}</p>
+                  <h3 class="card-title">{article.title}</h3>
+                  <p class="card-excerpt">{article.summary}</p>
                   <span class="card-cta">
                     Lire la suite
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">

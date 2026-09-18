@@ -12,6 +12,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.4.2"
+    "@libsql/client": "^0.18.0",
+    "astro": "^6.4.2",
+    "marked": "^18.0.13"
   }
 }
