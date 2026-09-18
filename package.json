@@ -12,8 +12,9 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/netlify": "^8.2.6",
     "@libsql/client": "^0.18.0",
-    "astro": "^6.4.2",
+    "astro": "^7.3.3",
     "marked": "^18.0.13"
   }
 }

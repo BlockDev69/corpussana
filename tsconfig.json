@@ -1,5 +1,30 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "types": [
+      "astro/client"
+    ],
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*",
+    "astro.config.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
