@@ -1,0 +1,185 @@
+---
+export const prerender = false;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const ADMIN_SECRET = import.meta.env.ADMIN_SECRET;
+let message = "";
+let isError = false;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  
+  const payload = {
+    slug: formData.get("slug"),
+    title: formData.get("title"),
+    author: formData.get("author"),
+    summary: formData.get("summary"),
+    date: formData.get("date"),
+    image: formData.get("image"),
+    color: formData.get("color"),
+    content: formData.get("content"),
+  };
+
+  const response = await fetch(`${Astro.url.origin}/api/articles`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${ADMIN_SECRET}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = await response.json();
+  message = result.message || result.error;
+  isError = !response.ok;
+}
+---
+
+<BaseLayout title="Administration - Créer un article">
+  <section class="admin-section">
+    <div class="container">
+      <header class="section-header">
+        <h1 class="section-title">Créer un nouvel article</h1>
+        <p class="section-subtitle">Ajoutez du contenu à la base de données Turso.</p>
+      </header>
+
+      {message && (
+        <div class={`alert ${isError ? 'alert-error' : 'alert-success'}`}>
+          {message}
+        </div>
+      )}
+
+      <form method="POST" class="admin-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="slug">Slug (URL)</label>
+            <input type="text" id="slug" name="slug" required placeholder="ex: lancement-kivu" pattern="[a-z0-9\-]+">
+          </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">Titre</label>
+          <input type="text" id="title" name="title" required placeholder="Titre de l'article">
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="author">Auteur</label>
+            <input type="text" id="author" name="author" required placeholder="Nom de l'auteur">
+          </div>
+          <div class="form-group">
+            <label for="color">Couleur d'accent</label>
+            <select id="color" name="color">
+              <option value="blue">Bleu</option>
+              <option value="orange">Orange</option>
+              <option value="green">Vert</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="summary">Résumé (Court)</label>
+          <textarea id="summary" name="summary" rows="3" required placeholder="Un court résumé pour la carte..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="image">URL de l'image (Optionnel)</label>
+          <input type="url" id="image" name="image" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+          <label for="content">Contenu (Markdown)</label>
+          <textarea id="content" name="content" rows="10" required placeholder="# Titre&#10;&#10;Votre contenu en **Markdown** ici..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          Publier l'article
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .admin-section { padding: clamp(3rem, 6vw, 5rem) 1.5rem; background: #f1f5f9; min-height: 100vh; }
+  .container { max-width: 800px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 2.5rem; }
+  .section-title { font-size: 2rem; font-weight: 800; color: #022c43; margin: 0 0 0.5rem; }
+  .section-subtitle { color: #475569; margin: 0; }
+
+  .alert { padding: 1rem; border: 2px solid; margin-bottom: 1.5rem; font-weight: 600; }
+  .alert-success { background: #eaf5e8; border-color: #48a23f; color: #2d6a25; }
+  .alert-error { background: #fdf0e6; border-color: #eb690b; color: #b83a1f; }
+
+  .admin-form {
+    background: #ffffff;
+    border: 3px solid #022c43;
+    padding: 2rem;
+    box-shadow: 6px 6px 0px #022c43;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-group label { font-size: 0.85rem; font-weight: 700; color: #022c43; text-transform: uppercase; letter-spacing: 0.05em; }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 0.75rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 0; /* Strict square */
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background: #f8fafc;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #009cb4;
+    background: #ffffff;
+    box-shadow: 3px 3px 0px #009cb4;
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+    background: #eb690b;
+    border: 2px solid #022c43;
+    border-radius: 0;
+    box-shadow: 4px 4px 0px #022c43;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+  }
+  .btn-submit svg { width: 18px; height: 18px; }
+  .btn-submit:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #022c43;
+    background: #d55a08;
+  }
+  .btn-submit:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px #022c43;
+  }
+</style>

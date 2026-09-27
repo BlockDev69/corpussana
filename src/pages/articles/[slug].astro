@@ -1,13 +1,11 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection, render } from "astro:content";
 import { turso } from "../../turso";
 
 import { marked } from "marked"
 
-export const prerender = false;
+export const prerender = true;
 
-// 1. Tell Astro which pages to generate at build time
 export async function getStaticPaths() {
   const articles = await turso.execute({
     sql: "SELECT slug FROM articles",
