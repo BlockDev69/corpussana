@@ -7,10 +7,14 @@ import { marked } from "marked"
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const articles = await turso.execute({
+  const result = await turso.execute({
     sql: "SELECT slug FROM articles",
     args: []
-  });
+    });
+
+  return result.rows.map((row: any) => ({
+    params: { slug: row.slug }
+    }));
 }
 
 const { slug } = Astro.params;
