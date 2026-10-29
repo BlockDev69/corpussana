@@ -42,6 +42,9 @@ if (Astro.request.method === "POST") {
       <header class="section-header">
         <h1 class="section-title">Créer un nouvel article</h1>
         <p class="section-subtitle">Ajoutez du contenu à la base de données Turso.</p>
+        <form method="POST" action="/admin/logout" class="logout-form">
+          <button type="submit" class="btn-logout">Se déconnecter</button>
+        </form>
       </header>
 
       {message && (
@@ -112,6 +115,22 @@ if (Astro.request.method === "POST") {
   .section-header { text-align: center; margin-bottom: 2.5rem; }
   .section-title { font-size: 2rem; font-weight: 800; color: #022c43; margin: 0 0 0.5rem; }
   .section-subtitle { color: #475569; margin: 0; }
+
+  .logout-form { margin-top: 1rem; }
+  .btn-logout {
+    padding: 0.5rem 1rem;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #022c43;
+    background: transparent;
+    border: 2px solid #022c43;
+    border-radius: 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .btn-logout:hover { background: #022c43; color: #ffffff; }
 
   .alert { padding: 1rem; border: 2px solid; margin-bottom: 1.5rem; font-weight: 600; }
   .alert-success { background: #eaf5e8; border-color: #48a23f; color: #2d6a25; }

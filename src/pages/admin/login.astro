@@ -1,0 +1,140 @@
+---
+export const prerender = false;
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  SESSION_COOKIE,
+  SESSION_MAX_AGE,
+  checkPassword,
+  createSessionToken,
+  isConfigured,
+  isValidSession,
+} from "../../auth";
+
+// En développement uniquement : signale une configuration manquante au lieu d'un faux « mot de passe incorrect »
+const missingConfig = import.meta.env.DEV && !isConfigured();
+
+// Déjà connecté : on renvoie directement vers l'administration
+if (await isValidSession(Astro.cookies.get(SESSION_COOKIE)?.value)) {
+  return Astro.redirect("/admin");
+}
+
+let error = "";
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const password = String(formData.get("password") ?? "");
+
+  if (await checkPassword(password)) {
+    Astro.cookies.set(SESSION_COOKIE, await createSessionToken(), {
+      path: "/admin",
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: "strict",
+      maxAge: SESSION_MAX_AGE,
+    });
+    return Astro.redirect("/admin");
+  }
+
+  error = "Mot de passe incorrect.";
+}
+---
+
+<BaseLayout title="Administration - Connexion">
+  <section class="admin-section">
+    <div class="container">
+      <header class="section-header">
+        <h1 class="section-title">Espace administration</h1>
+        <p class="section-subtitle">Connectez-vous pour gérer les articles.</p>
+      </header>
+
+      {missingConfig && (
+        <div class="alert alert-error">
+          ADMIN_PASSWORD ou ADMIN_SECRET n'est pas défini dans .env. Ajoutez-les puis redémarrez le serveur.
+        </div>
+      )}
+      {error && !missingConfig && <div class="alert alert-error">{error}</div>}
+
+      <form method="POST" class="admin-form">
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password" autofocus>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          Se connecter
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .admin-section { padding: clamp(3rem, 6vw, 5rem) 1.5rem; background: #f1f5f9; min-height: 100vh; }
+  .container { max-width: 420px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 2.5rem; }
+  .section-title { font-size: 2rem; font-weight: 800; color: #022c43; margin: 0 0 0.5rem; }
+  .section-subtitle { color: #475569; margin: 0; }
+
+  .alert { padding: 1rem; border: 2px solid; margin-bottom: 1.5rem; font-weight: 600; }
+  .alert-error { background: #fdf0e6; border-color: #eb690b; color: #b83a1f; }
+
+  .admin-form {
+    background: #ffffff;
+    border: 3px solid #022c43;
+    padding: 2rem;
+    box-shadow: 6px 6px 0px #022c43;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-group label { font-size: 0.85rem; font-weight: 700; color: #022c43; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .form-group input {
+    padding: 0.75rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 0;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background: #f8fafc;
+  }
+  .form-group input:focus {
+    outline: none;
+    border-color: #009cb4;
+    background: #ffffff;
+    box-shadow: 3px 3px 0px #009cb4;
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+    background: #eb690b;
+    border: 2px solid #022c43;
+    border-radius: 0;
+    box-shadow: 4px 4px 0px #022c43;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .btn-submit svg { width: 18px; height: 18px; }
+  .btn-submit:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #022c43;
+    background: #d55a08;
+  }
+  .btn-submit:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px #022c43;
+  }
+</style>

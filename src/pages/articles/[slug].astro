@@ -4,18 +4,8 @@ import { turso } from "../../turso";
 
 import { marked } from "marked"
 
-export const prerender = true;
-
-export async function getStaticPaths() {
-  const result = await turso.execute({
-    sql: "SELECT slug FROM articles",
-    args: []
-    });
-
-  return result.rows.map((row: any) => ({
-    params: { slug: row.slug }
-    }));
-}
+// Rendu à la demande : un article publié depuis /admin est visible sans redéploiement
+export const prerender = false;
 
 const { slug } = Astro.params;
 
